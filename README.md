@@ -5,6 +5,11 @@ C library implementing the ridiculously fast CLHash hashing function
  CLHash is a very fast hashing function that uses the
  carry-less multiplication and SSE instructions.
  Best used on recent x64 processors (Haswell or better).
+
+CLHash has the following characteristics :
+
+* On a recent Intel processor (e.g., Skylake), it can hash input strings at a speed of 0.1 cycles per byte. You read this right: it is simply ridiculously fast.
+* It has strong theoretical guarantees: XOR universality of short strings and excellent almost universality for longer strings.
   
 For details, please see the research article:
   
