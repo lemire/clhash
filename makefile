@@ -24,4 +24,4 @@ clhash.o: ./src/clhash.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/clhash.c -Iinclude
 
 clean:
-	rm -f $(OBJECTS) unit 
+	rm -f $(OBJECTS) unit example 
