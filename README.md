@@ -7,7 +7,7 @@ C library implementing the ridiculously fast CLHash hashing function
  Best used on recent x64 processors (Haswell or better).
   
   
-* Daniel Lemire, Owen Kaser, Faster 64-bit universal hashing using carry-less multiplications, Journal of Cryptographic Engineering (to appear) http://arxiv.org/abs/1503.03465
+Daniel Lemire, Owen Kaser, Faster 64-bit universal hashing using carry-less multiplications, Journal of Cryptographic Engineering (to appear) http://arxiv.org/abs/1503.03465
  
 Please do not try to compile and run this software on legacy hardware (x64 processors
 before Haswell), it will either fail to work or be slow. It should be able to port
@@ -20,13 +20,14 @@ unknown at this point. And, yes, this means that CLHash is *not* portable hardwa
  If your compiler is not C99 compliant... please get better one.
  
  
- Usage 
- -------
+## Usage 
  
  ```bash
  make
  ./unit
  ``
+
+## Code sample
  
 ```C
 #include <assert.h>
