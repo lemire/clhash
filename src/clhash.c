@@ -4,6 +4,9 @@
 #include <string.h>
 #include <x86intrin.h>
 
+#ifdef __WIN32
+#define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ?0 :errno)
+#endif
 
 //////////////////
 // compute the "lazy" modulo with 2^127 + 2 + 1, actually we compute the
