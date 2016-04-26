@@ -1,4 +1,6 @@
 # clhash
+[![Build Status](https://travis-ci.org/lemire/clhash.png)](https://travis-ci.org/lemire/clhash)
+
 C library implementing the ridiculously fast CLHash hashing function
 
 
