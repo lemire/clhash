@@ -15,7 +15,7 @@ CLHash has the following characteristics :
   
 For details, please see the research article:
   
-Daniel Lemire, Owen Kaser, Faster 64-bit universal hashing using carry-less multiplications, Journal of Cryptographic Engineering (to appear) http://arxiv.org/abs/1503.03465
+Daniel Lemire, Owen Kaser, Faster 64-bit universal hashing using carry-less multiplications, Journal of Cryptographic Engineering 6 (3), 2016. http://arxiv.org/abs/1503.03465
 
 ## Requirements
 
