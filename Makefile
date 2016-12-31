@@ -12,7 +12,7 @@ HEADERS=include/clhash.h
 
 OBJECTS= clhash.o
 
-all: $(OBJECTS) unit
+all: $(OBJECTS) unit benchmark example
 
 unit : ./tests/unit.c  $(HEADERS) $(OBJECTS)
 	$(CC) $(CFLAGS) -o unit ./tests/unit.c -Iinclude  $(OBJECTS)
@@ -20,8 +20,12 @@ unit : ./tests/unit.c  $(HEADERS) $(OBJECTS)
 example : ./example.c $(HEADERS) $(OBJECTS)
 	$(CC) $(CFLAGS) -o example example.c -Iinclude  $(OBJECTS)
 
+benchmark :./benchmarks/benchmark.c $(HEADERS) $(OBJECTS)
+	$(CC) $(CFLAGS) -o benchmark ./benchmarks/benchmark.c -Iinclude  $(OBJECTS)
+
+
 clhash.o: ./src/clhash.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/clhash.c -Iinclude
 
 clean:
-	rm -f $(OBJECTS) unit example 
+	rm -f $(OBJECTS) unit example benchmark

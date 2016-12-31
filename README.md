@@ -58,3 +58,10 @@ int main() {
 }
 
 ``
+
+## Simple benchmark
+
+ ```bash
+ make
+ ./benchmark
+ ```
