@@ -56,8 +56,7 @@ int main() {
     free(random);
     return 0;
 }
-
-``
+```
 
 ## Simple benchmark
 
