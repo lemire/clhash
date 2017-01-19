@@ -8,6 +8,24 @@
 #define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ?0 :errno)
 #endif
 
+
+
+// computes a << 1
+static inline __m128i leftshift1(__m128i a) {
+    const int x = 1;
+    __m128i u64shift =  _mm_slli_epi64(a,x);
+    __m128i topbits =  _mm_slli_si128(_mm_srli_epi64(a,64 - x),sizeof(uint64_t));
+    return _mm_or_si128(u64shift, topbits);
+}
+
+// computes a << 2
+static inline __m128i leftshift2(__m128i a) {
+    const int x = 2;
+    __m128i u64shift =  _mm_slli_epi64(a,x);
+    __m128i topbits =  _mm_slli_si128(_mm_srli_epi64(a,64 - x),sizeof(uint64_t));
+    return _mm_or_si128(u64shift, topbits);
+}
+
 //////////////////
 // compute the "lazy" modulo with 2^127 + 2 + 1, actually we compute the
 // modulo with (2^128 + 4 + 2) = 2 * (2^127 + 2 + 1) ,
@@ -31,38 +49,10 @@ static inline __m128i lazymod127(__m128i Alow, __m128i Ahigh) {
     // This is correct because the two highest bits of Ahigh are
     // assumed to be zero.
     ///////////////////////////////////////////////////
-    // We want to take Ahigh and compute       (  Ahigh <<1 ) XOR (  Ahigh <<2 )
-    // Except that there is no way to shift an entire XMM register by 1 or 2 bits  using a single instruction.
-    // So how do you compute Ahigh <<1 using as few instructions as possible?
-    //
-    // First you do _mm_slli_epi64(Ahigh,1). This is *almost* correct... except that
-    // the 64th bit is not shifted in 65th position.
-    // Well, ok, but we can compute Ahigh >> 8, this given by _mm_srli_si128(Ahigh,1)
-    // _mm_srli_si128(Ahigh,1) has the same bits as Ahigh (except that we lose the lowest 8)
-    // but at different positions.
-    // So let us shift left the result again...
-    //  _mm_slli_epi64(_mm_srli_si128(Ahigh,1),1)
-    // If you keep track, this is "almost" equivalent to A >> 7, except that the 72th bit
-    // from A is lost.
-    // From something that is almost A >>7, we can get back something that is almost A << 1
-    // by shifting left by 8 bits...
-    // _mm_slli_si128(_mm_slli_epi64(_mm_srli_si128(Ahigh,1),1),1)
-    // So this is a shift left by 1, except that the 72th bit is lost along with the lowest 8 bits.
-    // We have that  _mm_slli_epi64(Ahigh,1) is a shift let by 1 except that the 64th bit
-    // is lost. We can combine the two to get the desired result (just OR them).
-    // The algorithm below is just an optimized version of this where we do both shifts (by 1 and 2)
-    // at the same time and XOR the result.
-    //
-    __m128i shifteddownAhigh = _mm_srli_si128(Ahigh,1);
-    __m128i s1 = _mm_slli_epi64(Ahigh,1);
-    __m128i s2 = _mm_slli_epi64(Ahigh,2);
-    __m128i sd1 = _mm_slli_si128(_mm_slli_epi64(shifteddownAhigh,1),1);
-    __m128i sd2 = _mm_slli_si128(_mm_slli_epi64(shifteddownAhigh,2),1);
-    s1 = _mm_or_si128(s1,sd1);
-    s2 = _mm_or_si128(s2,sd2);
-    __m128i reduced = _mm_xor_si128(s1,s2);
-    // combining results
-    __m128i final = _mm_xor_si128(Alow,reduced);
+    // credit for simplified implementation : Jan Wassenberg
+    __m128i shift1 = leftshift1(Ahigh);
+    __m128i shift2 = leftshift2(Ahigh);
+    __m128i final =  _mm_xor_si128(_mm_xor_si128(Alow, shift1),shift2);
     return final;
 }
 
