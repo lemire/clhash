@@ -19,6 +19,10 @@
 #include <stdint.h> // life is short, please use a C99-compliant compiler
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum {RANDOM_64BITWORDS_NEEDED_FOR_CLHASH=133,RANDOM_BYTES_NEEDED_FOR_CLHASH=133*8};
 
 
@@ -47,5 +51,8 @@ uint64_t clhash(const void* random, const char * stringbyte,
  */
 void * get_random_key_for_clhash(uint64_t seed1, uint64_t seed2);
 
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* INCLUDE_CLHASH_H_ */
