@@ -55,4 +55,28 @@ void * get_random_key_for_clhash(uint64_t seed1, uint64_t seed2);
 } // extern "C"
 #endif
 
+#ifdef __cplusplus
+#include <vector>
+
+struct clhasher {
+    const void *random_data_;
+    clhasher(uint64_t seed1=137, uint64_t seed2=777): random_data_(get_random_key_for_clhash(seed1, seed2)) {}
+    template<typename T>
+    uint64_t operator()(const T *data, const size_t len) const {
+        return clhash(random_data_, (const char *)data, len * sizeof(T));
+    }
+    template<typename T>
+    uint64_t operator()(const T &input) const {
+        return operator()((const char *)&input, sizeof(T));
+    }
+    template<typename T>
+    uint64_t operator()(const std::vector<T> &input) const {
+        return operator()((const char *)input.data(), sizeof(T) * input.size());
+    }
+    ~clhasher() {
+        std::free((void *)random_data_);
+    }
+};
+#endif // #ifdef __cplusplus
+
 #endif /* INCLUDE_CLHASH_H_ */
