@@ -57,6 +57,7 @@ void * get_random_key_for_clhash(uint64_t seed1, uint64_t seed2);
 
 #ifdef __cplusplus
 #include <vector>
+#include <string>
 
 struct clhasher {
     const void *random_data_;
@@ -72,6 +73,9 @@ struct clhasher {
     template<typename T>
     uint64_t operator()(const std::vector<T> &input) const {
         return operator()((const char *)input.data(), sizeof(T) * input.size());
+    }
+    uint64_t operator()(const std::string &str) const {
+        return operator()(str.data(), str.size());
     }
     ~clhasher() {
         std::free((void *)random_data_);
