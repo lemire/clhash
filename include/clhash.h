@@ -19,6 +19,10 @@
 #include <stdint.h> // life is short, please use a C99-compliant compiler
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum {RANDOM_64BITWORDS_NEEDED_FOR_CLHASH=133,RANDOM_BYTES_NEEDED_FOR_CLHASH=133*8};
 
 
@@ -47,5 +51,38 @@ uint64_t clhash(const void* random, const char * stringbyte,
  */
 void * get_random_key_for_clhash(uint64_t seed1, uint64_t seed2);
 
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#ifdef __cplusplus
+#include <vector>
+#include <string>
+#include <cstring> // For std::strlen
+
+struct clhasher {
+    const void *random_data_;
+    clhasher(uint64_t seed1=137, uint64_t seed2=777): random_data_(get_random_key_for_clhash(seed1, seed2)) {}
+    template<typename T>
+    uint64_t operator()(const T *data, const size_t len) const {
+        return clhash(random_data_, (const char *)data, len * sizeof(T));
+    }
+    uint64_t operator()(const char *str) const {return operator()(str, std::strlen(str));}
+    template<typename T>
+    uint64_t operator()(const T &input) const {
+        return operator()((const char *)&input, sizeof(T));
+    }
+    template<typename T>
+    uint64_t operator()(const std::vector<T> &input) const {
+        return operator()((const char *)input.data(), sizeof(T) * input.size());
+    }
+    uint64_t operator()(const std::string &str) const {
+        return operator()(str.data(), str.size());
+    }
+    ~clhasher() {
+        std::free((void *)random_data_);
+    }
+};
+#endif // #ifdef __cplusplus
 
 #endif /* INCLUDE_CLHASH_H_ */
