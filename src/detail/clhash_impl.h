@@ -1,5 +1,7 @@
-#include <assert.h>
-#include <string.h>
+#pragma once
+
+#include <cassert>
+#include <cstring>
 #include <x86intrin.h>
 
 #ifdef __WIN32
@@ -7,6 +9,11 @@
 #endif
 
 namespace lemire {
+    enum {
+        RANDOM_64BITWORDS_NEEDED_FOR_CLHASH = 133,
+        RANDOM_BYTES_NEEDED_FOR_CLHASH = 133 * 8
+    };
+
     // computes a << 1
     static inline __m128i leftshift1(__m128i a) {
         const int x = 1;
@@ -415,4 +422,4 @@ namespace lemire {
         }
         return answer;
     }
-} // namespace lemere
+} // namespace lemire
