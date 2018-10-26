@@ -1,4 +1,4 @@
-/*
+/**
  * CLHash is a very fast hashing function that uses the
  * carry-less multiplication and SSE instructions.
  *
@@ -13,28 +13,41 @@
 
 #pragma once
 
+#include "detail/clhash_impl.h"
 #include <string>
 #include <vector>
-#include "detail/clhash_impl.h"
 
 namespace lemire {
-    struct clhasher {
-        const void *random_data_;
+    class clhasher {
+      public:
         clhasher(uint64_t seed1 = 137, uint64_t seed2 = 777)
             : random_data_(get_random_key_for_clhash(seed1, seed2)) {}
+
+        ~clhasher() { std::free((void *)random_data_); }
+
         template <typename T> uint64_t operator()(const T *data, const size_t len) const {
-            return clhash(random_data_, (const char *)data, len * sizeof(T));
+            return clhash(random_data_, static_cast<const char *>(data), len * sizeof(T));
         }
-        uint64_t operator()(const char *str) const { return operator()(str, std::strlen(str)); }
-        template <typename T> uint64_t operator()(const T &input) const {
-            return operator()((const char *)&input, sizeof(T));
+
+        // For strings
+        uint64_t operator()(const char *str) const {
+            return clhash(random_data_, str, strlen(str));
         }
-        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
-            return operator()((const char *)input.data(), sizeof(T) * input.size());
-        }
+
         uint64_t operator()(const std::string &str) const {
             return operator()(str.data(), str.size());
         }
-        ~clhasher() { std::free((void *)random_data_); }
+
+        // For other data types
+        template <typename T> uint64_t operator()(const T &input) const {
+            return operator()((const char *)&input, sizeof(T));
+        }
+
+        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
+            return operator()((const char *)input.data(), sizeof(T) * input.size());
+        }
+
+      private:
+        const void *random_data_;
     };
 } // namespace lemire

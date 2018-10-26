@@ -1,30 +1,38 @@
 #include "clhash.h"
+#include "fmt/format.h"
 #include <cassert>
 #include <cstdio>
 #include <vector>
-#include "fmt/format.h"
 
-int main(void) {
-    using namespace lemire;
-    clhasher h(1, 4);
-    std::vector<int> vec{1, 3, 4, 5, 2, 24343};
-    int arr[6];
-    std::memcpy(arr, vec.data(), sizeof(arr));
-    auto hash(h(vec));
-    fmt::print("hash code: {}\n", hash);
+#define CATCH_CONFIG_MAIN
+#include "catch/catch.hpp"
 
-    // HPR
-    assert(h(arr, 6) == hash);
-    hash = h("o hai wurld");
-    // HPR
-    assert(hash == h(std::string("o hai wurld")));
-    hash = h(vec.data() + 1, vec.size() - 1);
-    // HPR
-    assert(h(vec.data() + 1, vec.size() - 1) ==
-           h(std::vector<int>(vec.begin() + 1, vec.end())));
-    // HPR
-    hash = h(7723291);
-    // HPR
-    assert(h(7723291ULL) != hash); // Changing the size of the object changes the "string".
-    printf("code is good.\n");
+template <typename T> void test() {
+    lemire::clhasher h1, h2, h3(5, 27);
+    T array[6] = {1, 3, 9, 22, 47, 24343};
+    std::vector<T> vector = {1, 3, 9, 22, 47, 24343};
+    CHECK(h1(array) == h2(vector)); // Same seeds must produce the same hash values.
+    CHECK(h1(array) != h3(vector)); // Different seeds must produce different hash values.
+
+    // Check hash values of scalars
+    CHECK(h1(vector[5]) == h2(array[5]));
+    CHECK(h1(vector[5]) != h3(array[5]));
+}
+
+TEST_CASE("Regular data type tests", "") {
+    test<int>();
+    test<float>();
+    test<double>();
+    test<size_t>();
+    lemire::clhasher h;
+    CHECK(h(7723291ULL) == 6077153076896802708ULL);
+    CHECK(h(1ULL) == 6105994745979306188ULL);
+    CHECK(h(29ULL) == 6105994779349333020ULL);
+}
+
+
+TEST_CASE("Basic string tests", "") {
+    lemire::clhasher h(1, 4);
+    const char *str = "Hello world!";
+    CHECK(h(str) == h(std::string(str)));
 }

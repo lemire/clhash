@@ -300,7 +300,7 @@ namespace lemire {
                     __clmulhalfscalarproductwithoutreduction(rs64, string + t, m);
                 acc = _mm_xor_si128(acc, h1);
             }
-            const int remain = length - t; // number of completely filled words
+            const size_t remain = length - t; // number of completely filled words
 
             if (remain != 0) {
                 // we compute something like
