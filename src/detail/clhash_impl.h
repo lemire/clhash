@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstring>
 #include <x86intrin.h>
+#include <cstdint>
 
 #ifdef __WIN32
 #define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ? 0 : errno)
