@@ -10,7 +10,7 @@ C library implementing the ridiculously fast CLHash hashing function (with C++ w
 
 CLHash has the following characteristics :
 
-* On a recent Intel processor (e.g., Skylake), it can hash input strings at a speed of 0.1 cycles per byte. You read this right: it is simply ridiculously fast.
+* On a recent Intel processor (e.g., Skylake), it can hash input strings at a speed of 0.1 cycles per byte for sufficiently long strings. You read this right: it is simply ridiculously fast.
 * It has strong theoretical guarantees: XOR universality of short strings and excellent almost universality for longer strings.
 
 For details, please see the research article:
@@ -27,7 +27,9 @@ unknown at this point. And, yes, this means that CLHash is *not* portable hardwa
 
 If your compiler is not C99 compliant... please get better one.
 
-
+If your applications requires hashing tiny strings, then you will not get a speed close to 0.1 cycles per byte. 
+The string should be significantly several times larger than a vector register (128 bits). So clhash is not
+meant to be a general-purpose hash function.
 
 
 ## Usage
