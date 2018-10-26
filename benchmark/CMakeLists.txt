@@ -11,14 +11,13 @@ include(AddCXXCompilerFlag)
 include(CXXFeatureCheck)
 
 # Use libc++  provided by llvm
-set(CMAKE_CXX_COMPILER "clang++")
+# set(CMAKE_CXX_COMPILER "clang++")
 # add_cxx_compiler_flag(-stdlib=libc++)
 
 set (CMAKE_BUILD_TYPE Release)
 add_cxx_compiler_flag(-O3)
 add_cxx_compiler_flag(-march=native)
-
-add_cxx_compiler_flag(-msse4.2)
+# add_cxx_compiler_flag(-msse4.2)
 add_cxx_compiler_flag(-mpclmul)
 add_cxx_compiler_flag(-funroll-loops)
 add_cxx_compiler_flag(-Wstrict-overflow)
