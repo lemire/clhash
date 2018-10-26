@@ -1,5 +1,4 @@
 #include "clhash.h"
-#include "fmt/format.h"
 #include <cassert>
 #include <cstdio>
 #include <vector>

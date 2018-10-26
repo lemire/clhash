@@ -7,11 +7,6 @@ message("ROOT_DIR: ${ROOT_DIR}")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# CMake build flags
-option(UTILS_ENABLE_COVERAGE "Generate coverage" ON)
-option(UTILS_ENABLE_WERROR "Enable all warnings as errors" OFF)
-option(UTILS_USE_AVX2 "Enable tests for AVX2 implementations" OFF)
-
 # Read the git tags to determine the project version
 include(GetGitVersion)
 get_git_version(GIT_VERSION)
@@ -79,15 +74,13 @@ add_cxx_compiler_flag(-DFMT_HEADER_ONLY)
 ENABLE_TESTING()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Used libraries
-
 # Include other headers such as fmt library.
 include_directories ("${EXTERNAL_DIR}/include")
 
 # Include utils headers
 include_directories ("${ROOT_DIR}/src")
 
-set(COMMAND_SRC_FILES cppunit)
+set(COMMAND_SRC_FILES basic_tests)
 foreach (src_file ${COMMAND_SRC_FILES})
   ADD_EXECUTABLE(${src_file} ${src_file}.cpp)
   TARGET_LINK_LIBRARIES(${src_file})
