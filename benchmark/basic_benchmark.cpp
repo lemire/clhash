@@ -2,8 +2,10 @@
 #include <benchmark/benchmark.h>
 #include <functional>
 #include "boost/container_hash/hash.hpp"
+#include "fmt/format.h"
 
-const std::string test_string("This is my test string");
+const char * str = "On a recent Intel processor (e.g., Skylake), it can hash input strings at a speed of 0.1 cycles per byte. You read this right: it is simply ridiculously fast.";
+const std::string test_string(str);
 
 // hash functions
 void std_hash_string(benchmark::State &state) {
