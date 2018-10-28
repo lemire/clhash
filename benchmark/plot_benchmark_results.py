@@ -42,6 +42,7 @@ for idx in range(1, N):
 
 # Plot results
 x = np.arange(1, N + 1, 1)
+f = plt.figure()
 line1, line2, line3 = plt.plot(
     x, std_hash_results, "r", x, clhash_results, "b", x, boost_hash_results, "o")
 plt.xlabel("String length (bytes)")
@@ -51,4 +52,9 @@ plt.ylim(0, 200)
 plt.xlim(1, N)
 plt.grid()
 plt.legend((line1, line2, line3), ('std::hash', 'clhash', 'boost::hash'))
+
+# Save to a pdf file
+f.savefig("results.pdf")
+
+# Show the picture
 plt.show()
