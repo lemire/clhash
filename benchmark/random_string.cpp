@@ -46,7 +46,7 @@ void std_hash_string(benchmark::State &state) {
 BENCHMARK(std_hash_string);
 
 void clhash_string(benchmark::State &state) {
-    lemire::clhash::CLHash clhash;
+    clhash::CLHash clhash;
     for (auto _ : state) {
         benchmark::DoNotOptimize(clhash(test_string.data(), test_string.size()));
     }
@@ -60,5 +60,15 @@ void boost_hash_string(benchmark::State &state) {
 }
 // Register the function as a benchmark
 BENCHMARK(boost_hash_string);
+
+void hybrid_hash_string(benchmark::State &state) {
+    clhash::CLHash clhash;
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(clhash(test_string));
+    }
+}
+// Register the function as a benchmark
+BENCHMARK(hybrid_hash_string);
+
 
 BENCHMARK_MAIN();

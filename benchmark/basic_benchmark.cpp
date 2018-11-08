@@ -34,7 +34,7 @@ void std_hash_string(benchmark::State &state) {
 BENCHMARK(std_hash_string);
 
 void clhash_string(benchmark::State &state) {
-    lemire::clhash::CLHash clhash;
+    clhash::CLHash clhash;
     for (auto _ : state) {
         benchmark::DoNotOptimize(clhash(test_string.data(), test_string.size()));
     }

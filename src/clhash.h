@@ -26,7 +26,7 @@ namespace clhash {
         ~CLHash() { std::free((void *)random_data_); }
 
         template <typename T> uint64_t operator()(const T *data, const size_t len) const {
-            return clhash(random_data_, reinterpret_cast<const char *>(data), len * sizeof(T));
+            return clhash(random_data_, (const char *)(data), len * sizeof(T));
         }
 
         // Use std::hash to compute the hash value of string with size
@@ -39,11 +39,11 @@ namespace clhash {
 
         // For other data types
         template <typename T> uint64_t operator()(const T &input) const {
-            return operator()(&input, sizeof(T));
+            return operator()((const char *)(&input), sizeof(T));
         }
 
         template <typename T> uint64_t operator()(const std::vector<T> &input) const {
-            return operator()(input.data(), sizeof(T) * input.size());
+            return operator()((const char *)(input.data()), sizeof(T) * input.size());
         }
 
       private:
