@@ -33,13 +33,13 @@ namespace clhash {
         // less then 192 bytes. This decision is based on our benchmark
         // results.
         uint64_t operator()(const std::string &str) const {
-            return (str.size() < CUT_OF_LENGTH) ? string_hash_fcn(str) :
+            return (str.size() < CUT_OFF_LENGTH) ? string_hash_fcn(str) :
                                                 operator()(str.data(), str.size());
         }
 
         // For other data types
         template <typename T> uint64_t operator()(const T &input) const {
-            return operator()((const char *)&input, sizeof(T));
+            return operator()(&input, sizeof(T));
         }
 
         template <typename T> uint64_t operator()(const std::vector<T> &input) const {
@@ -51,6 +51,6 @@ namespace clhash {
         std::hash<std::string> string_hash_fcn;
         static constexpr uint64_t SEED1 = 137;
         static constexpr uint64_t SEED2 = 777;
-        static constexpr size_t CUT_OF_LENGTH = 192;
+        static constexpr size_t CUT_OFF_LENGTH = 192;
     };
 } // namespace clhash
