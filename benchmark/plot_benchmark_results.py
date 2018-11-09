@@ -16,34 +16,32 @@ def plot_results(prefix, N):
         data = json.load(open(data_file))
         benchmark_results = data["benchmarks"]
         # print(benchmark_results)
-    
-    for info in benchmark_results:
-        benchmark_name = info["name"]
-        if (benchmark_name == "std_hash_string"):
-            std_hash_results[idx] = info["real_time"]
-        elif (benchmark_name == "clhash_string"):
-            clhash_results[idx] = info["real_time"]
-        elif (benchmark_name == "boost_hash_string"):
-            boost_hash_results[idx] = info["real_time"]
-        elif (benchmark_name == "hybrid_hash_string"):
-            hybrid_hash_results[idx] = info["real_time"]
-        else:
-            print("How can we get here?")
 
-            
+        for info in benchmark_results:
+            benchmark_name = info["name"]
+            if (benchmark_name == "std_hash_string"):
+                std_hash_results[idx] = info["real_time"]
+            elif (benchmark_name == "clhash_string"):
+                clhash_results[idx] = info["real_time"]
+            elif (benchmark_name == "boost_hash_string"):
+                boost_hash_results[idx] = info["real_time"]
+            elif (benchmark_name == "hybrid_hash_string"):
+                hybrid_hash_results[idx] = info["real_time"]
+            else:
+                print("How can we get here?")
+
     # Plot results
     x = np.arange(1, N + 1, 1)
-    line1, line2, line3 = plt.plot(
-        x, std_hash_results, "r", x, clhash_results, "b", x, boost_hash_results, "o")
+    line1, line2, line3, line4 = plt.plot(
+        x, std_hash_results, "r", x, clhash_results, "b", x, boost_hash_results, 'g', x, hybrid_hash_results, 'y')
     plt.xlabel("String length (bytes)")
     plt.ylabel("Run time (ns)")
     plt.ylim(0, 200)
     plt.xlim(1, N)
     plt.grid()
-    plt.legend((line1, line2, line3), ('std::hash', 'clhash', 'boost::hash'))
+    plt.legend((line1, line2, line3, line4), ('std::hash', 'clhash', 'boost::hash', 'hybrid_hash'))
     plt.show()
 
-    
 # Parse input arguments
 parser = argparse.ArgumentParser(description='Required input arguments.')
 parser.add_argument('prefix', metavar='prefix', type=str,
@@ -60,4 +58,3 @@ N = args.maximum_length
 
 # Plot benchmark results
 plot_results(prefix, N)
-

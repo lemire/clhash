@@ -1,5 +1,5 @@
 #!/bin/bash
-N=3000
+N=4096
 mkdir -p data
 for idx in `seq 1 1 $N`;
 do

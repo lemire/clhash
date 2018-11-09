@@ -51,6 +51,6 @@ namespace clhash {
         std::hash<std::string> string_hash_fcn;
         static constexpr uint64_t SEED1 = 137;
         static constexpr uint64_t SEED2 = 777;
-        static constexpr size_t CUT_OFF_LENGTH = 192;
+        static constexpr size_t CUT_OFF_LENGTH = 128;
     };
 } // namespace clhash
