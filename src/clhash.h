@@ -51,6 +51,7 @@ namespace clhash {
         std::hash<std::string> string_hash_fcn;
         static constexpr uint64_t SEED1 = 137;
         static constexpr uint64_t SEED2 = 777;
+        // 128 bytes is a safe threshold. This cut-off is varied based on the CPU architecture.
         static constexpr size_t CUT_OFF_LENGTH = 128;
     };
 } // namespace clhash

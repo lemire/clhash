@@ -10,8 +10,8 @@ def plot_results(prefix, N):
     clhash_results = np.zeros(N, dtype=float)
     boost_hash_results = np.zeros(N, dtype=float)
     hybrid_hash_results = np.zeros(N, dtype=float)
-    for idx in range(1, N):
-        data_file = prefix + str(idx) + ".json"
+    for idx in range(0, N):
+        data_file = prefix + str(idx + 1) + ".json"
         # print("data_file: ", data_file)
         data = json.load(open(data_file))
         benchmark_results = data["benchmarks"]
@@ -36,7 +36,7 @@ def plot_results(prefix, N):
         x, std_hash_results, "r", x, clhash_results, "b", x, boost_hash_results, 'g', x, hybrid_hash_results, 'y')
     plt.xlabel("String length (bytes)")
     plt.ylabel("Run time (ns)")
-    plt.ylim(0, 200)
+    plt.ylim(0, 1000)
     plt.xlim(1, N)
     plt.grid()
     plt.legend((line1, line2, line3, line4), ('std::hash', 'clhash', 'boost::hash', 'hybrid_hash'))
