@@ -7,6 +7,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
+#include <chrono>
 
 namespace {
     class RandomVector {

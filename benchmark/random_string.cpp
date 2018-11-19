@@ -7,15 +7,19 @@
 #include <random>
 #include <stdexcept>
 #include <cstdlib>
+
+#define XXH_INLINE_ALL
 #include "xxhash.h"
+
 #include "farmhash.h"
+#include "farmhash.cc"
 
 
 class CharGenerator {
   public:
     std::string operator()(const size_t len) {
         std::string str(len, 0);
-        for (auto idx = 0; idx < len; ++idx) { str[idx] = valid_characters[rgn() % N]; }
+        for (size_t idx = 0; idx < len; ++idx) { str[idx] = valid_characters[rgn() % N]; }
         std::cout << "Generated random string: " << str << "\n";
         return str;
     }
@@ -90,7 +94,6 @@ void farmhash_string(benchmark::State &state) {
         benchmark::DoNotOptimize(util::Hash(test_string.data(), test_string.size()));
     }
 }
-// Register the function as a benchmark
 BENCHMARK(farmhash_string);
 
 
