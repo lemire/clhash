@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include "xxhash.h"
+#include "farmhash.h"
 
 
 class CharGenerator {
@@ -82,6 +83,15 @@ void xxhash_string(benchmark::State &state) {
 }
 // Register the function as a benchmark
 BENCHMARK(xxhash_string);
+
+// FarmHash
+void farmhash_string(benchmark::State &state) {
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(util::Hash(test_string.data(), test_string.size()));
+    }
+}
+// Register the function as a benchmark
+BENCHMARK(farmhash_string);
 
 
 BENCHMARK_MAIN();
