@@ -6,6 +6,9 @@
 #include <iterator>
 #include <random>
 #include <stdexcept>
+#include <cstdlib>
+#include "xxhash.h"
+
 
 class CharGenerator {
   public:
@@ -37,21 +40,21 @@ std::string generate_random_string() {
 
 const std::string test_string = generate_random_string();
 
-// hash functions
+// std::hash benchmark
 void std_hash_string(benchmark::State &state) {
     std::hash<std::string> h;
     for (auto _ : state) { benchmark::DoNotOptimize(h(test_string)); }
 }
-// Register the function as a benchmark
+
 BENCHMARK(std_hash_string);
 
+// clhash benchmark
 void clhash_string(benchmark::State &state) {
     clhash::CLHash clhash;
     for (auto _ : state) {
         benchmark::DoNotOptimize(clhash(test_string.data(), test_string.size()));
     }
 }
-// Register the function as a benchmark
 BENCHMARK(clhash_string);
 
 void boost_hash_string(benchmark::State &state) {
@@ -69,6 +72,16 @@ void hybrid_hash_string(benchmark::State &state) {
 }
 // Register the function as a benchmark
 BENCHMARK(hybrid_hash_string);
+
+// xxHash
+void xxhash_string(benchmark::State &state) {
+    unsigned long long const seed = 0;
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(XXH64(test_string.data(), test_string.size(), seed));
+    }
+}
+// Register the function as a benchmark
+BENCHMARK(xxhash_string);
 
 
 BENCHMARK_MAIN();

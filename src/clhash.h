@@ -37,18 +37,19 @@ namespace clhash {
                                                 operator()(str.data(), str.size());
         }
 
-        // For other data types
-        template <typename T> uint64_t operator()(const T &input) const {
-            return operator()((const char *)(&input), sizeof(T));
+        // Other data types
+        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
+            return operator()(input.data(), input.size());
         }
 
-        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
-            return operator()((const char *)(input.data()), sizeof(T) * input.size());
+        template <typename T> uint64_t operator()(const T &value) const {
+            return operator()(&value, 1);
         }
+
 
       private:
-        const void *random_data_;
         std::hash<std::string> string_hash_fcn;
+        const void *random_data_;
         static constexpr uint64_t SEED1 = 137;
         static constexpr uint64_t SEED2 = 777;
         // 128 bytes is a safe threshold. This cut-off is varied based on the CPU architecture.

@@ -47,8 +47,9 @@ include_directories ("${ROOT_DIR}/src")
 
 # Used libraries
 SET(LIB_BENCHMARK "${EXTERNAL_DIR}/lib/libbenchmark.a")
-set(COMMAND_SRC_FILES basic_benchmark random_string)
+SET(LIB_XXHASH "${EXTERNAL_DIR}/lib/libxxhash.a")
+set(COMMAND_SRC_FILES basic_benchmark random_string random_data)
 foreach (src_file ${COMMAND_SRC_FILES})
   ADD_EXECUTABLE(${src_file} ${src_file}.cpp)
-  TARGET_LINK_LIBRARIES(${src_file} -lpthread -lm ${LIB_BENCHMARK})
+  TARGET_LINK_LIBRARIES(${src_file} -lpthread -lm ${LIB_BENCHMARK} ${LIB_XXHASH})
 endforeach (src_file)

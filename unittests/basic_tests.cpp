@@ -19,6 +19,15 @@ template <typename T> void test() {
     // Check hash values of scalars
     CHECK(h1(vector[5]) == h2(array[5]));
     CHECK(h1(vector[5]) != h3(array[5]));
+
+    // Make sure that we compute the hash using the value of a variable.
+    T value1 = 1.0, value2 = 2.0;
+    CHECK(h1(value1) != h2(value2));
+    CHECK(h1(value1) != h2(&value2, sizeof(T)));
+
+    value2 = value1;
+    CHECK(h1(value1) == h2(value2));
+    CHECK(h1(value1) == h2(&value2, 1));
 }
 
 TEST_CASE("Regular data type tests", "") {
