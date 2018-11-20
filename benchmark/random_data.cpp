@@ -1,13 +1,18 @@
 #include "boost/container_hash/hash.hpp"
 #include "clhash.h"
+#include "hybrid_hash.h"
 #include <algorithm>
 #include <benchmark/benchmark.h>
+#include <chrono>
 #include <iostream>
 #include <iterator>
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include <chrono>
+
+// farmhash header
+#define XXH_INLINE_ALL
+#include "xxhash.h"
 
 namespace {
     class RandomVector {
@@ -42,6 +47,9 @@ namespace {
 const auto idata = generate_random_data<int>();
 const auto ddata = generate_random_data<double>();
 
+/**
+ * Benchmark for int data
+ */
 // hash functions
 // void std_hash_int(benchmark::State &state) {
 //     std::hash<int> h;
@@ -55,21 +63,46 @@ const auto ddata = generate_random_data<double>();
 // BENCHMARK(std_hash_int);
 
 void clhash_int(benchmark::State &state) {
-    clhash::CLHash clhash;
+    util::CLHash clhash;
     for (auto _ : state) { benchmark::DoNotOptimize(clhash(idata.data(), idata.size())); }
 }
-// Register the function as a benchmark
 BENCHMARK(clhash_int);
+
 
 void boost_hash_int(benchmark::State &state) {
     boost::hash<std::vector<int>> h;
     for (auto _ : state) { benchmark::DoNotOptimize(h(idata)); }
 }
-// Register the function as a benchmark
 BENCHMARK(boost_hash_int);
 
+// xxHash
+void xxhash_int(benchmark::State &state) {
+    unsigned long long const seed = 0;
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(XXH64((char*)(idata.data()), idata.size() * sizeof(int), seed));
+    }
+}
+BENCHMARK(xxhash_int);
+
+// FarmHash
+void farmhash_int(benchmark::State &state) {
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(util::Hash((char*)idata.data(), idata.size() * sizeof(int)));
+    }
+}
+BENCHMARK(farmhash_int);
+
+void hybrid_hash_int(benchmark::State &state) {
+    util::HybridHash h;
+    for (auto _ : state) { benchmark::DoNotOptimize(h(idata.data(), idata.size())); }
+}
+BENCHMARK(hybrid_hash_int);
+
+/**
+ * Benchmark for double data
+ */
 void clhash_double(benchmark::State &state) {
-    clhash::CLHash clhash;
+    util::CLHash clhash;
     for (auto _ : state) { benchmark::DoNotOptimize(clhash(ddata.data(), ddata.size())); }
 }
 // Register the function as a benchmark
@@ -81,5 +114,28 @@ void boost_hash_double(benchmark::State &state) {
 }
 // Register the function as a benchmark
 BENCHMARK(boost_hash_double);
+
+// xxHash
+void xxhash_double(benchmark::State &state) {
+    unsigned long long const seed = 0;
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(XXH64((char*)(ddata.data()), ddata.size() * sizeof(double), seed));
+    }
+}
+BENCHMARK(xxhash_double);
+
+// FarmHash
+void farmhash_double(benchmark::State &state) {
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(util::Hash((char*)ddata.data(), ddata.size() * sizeof(double)));
+    }
+}
+BENCHMARK(farmhash_double);
+
+void hybrid_hash_double(benchmark::State &state) {
+    util::HybridHash h;
+    for (auto _ : state) { benchmark::DoNotOptimize(h(ddata.data(), ddata.size())); }
+}
+BENCHMARK(hybrid_hash_double);
 
 BENCHMARK_MAIN();

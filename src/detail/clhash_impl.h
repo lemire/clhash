@@ -9,7 +9,7 @@
 #define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ? 0 : errno)
 #endif
 
-namespace clhash {
+namespace {
     namespace {
         enum {
             RANDOM_64BITWORDS_NEEDED_FOR_CLHASH = 133,

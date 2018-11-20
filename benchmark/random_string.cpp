@@ -1,5 +1,6 @@
 #include "boost/container_hash/hash.hpp"
 #include "clhash.h"
+#include "hybrid_hash.h"
 #include <algorithm>
 #include <benchmark/benchmark.h>
 #include <iostream>
@@ -10,10 +11,6 @@
 
 #define XXH_INLINE_ALL
 #include "xxhash.h"
-
-#include "farmhash.h"
-#include "farmhash.cc"
-
 
 class CharGenerator {
   public:
@@ -55,7 +52,7 @@ BENCHMARK(std_hash_string);
 
 // clhash benchmark
 void clhash_string(benchmark::State &state) {
-    clhash::CLHash clhash;
+    util::CLHash clhash;
     for (auto _ : state) {
         benchmark::DoNotOptimize(clhash(test_string.data(), test_string.size()));
     }
@@ -70,9 +67,9 @@ void boost_hash_string(benchmark::State &state) {
 BENCHMARK(boost_hash_string);
 
 void hybrid_hash_string(benchmark::State &state) {
-    clhash::CLHash clhash;
+    util::HybridHash h;
     for (auto _ : state) {
-        benchmark::DoNotOptimize(clhash(test_string));
+        benchmark::DoNotOptimize(h(test_string));
     }
 }
 // Register the function as a benchmark

@@ -4,6 +4,10 @@
 #include <benchmark/benchmark.h>
 #include <functional>
 
+// farmhash header
+#define XXH_INLINE_ALL
+#include "xxhash.h"
+
 const std::string test_string =
     "We hold these truths to be self-evident, that all men are created equal, that they are "
     "endowed by their Creator with certain unalienable Rights, "
@@ -34,7 +38,7 @@ void std_hash_string(benchmark::State &state) {
 BENCHMARK(std_hash_string);
 
 void clhash_string(benchmark::State &state) {
-    clhash::CLHash clhash;
+    util::CLHash clhash;
     for (auto _ : state) {
         benchmark::DoNotOptimize(clhash(test_string.data(), test_string.size()));
     }

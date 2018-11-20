@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace clhash {
+namespace util {
     class CLHash {
       public:
         CLHash(uint64_t seed1 = SEED1, uint64_t seed2 = SEED2)
@@ -33,8 +33,7 @@ namespace clhash {
         // less then 192 bytes. This decision is based on our benchmark
         // results.
         uint64_t operator()(const std::string &str) const {
-            return (str.size() < CUT_OFF_LENGTH) ? string_hash_fcn(str) :
-                                                operator()(str.data(), str.size());
+            return operator()(str.data(), str.size());
         }
 
         // Other data types
@@ -46,13 +45,9 @@ namespace clhash {
             return operator()(&value, 1);
         }
 
-
       private:
-        std::hash<std::string> string_hash_fcn;
         const void *random_data_;
         static constexpr uint64_t SEED1 = 137;
         static constexpr uint64_t SEED2 = 777;
-        // 128 bytes is a safe threshold. This cut-off is varied based on the CPU architecture.
-        static constexpr size_t CUT_OFF_LENGTH = 128;
     };
 } // namespace clhash
