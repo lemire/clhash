@@ -55,8 +55,8 @@ add_cxx_compiler_flag(-Werror RELEASE)
 add_cxx_compiler_flag(-Werror RELWITHDEBINFO)
 add_cxx_compiler_flag(-Werror MINSIZEREL)
 
-add_cxx_compiler_flag(-Wshorten-64-to-32)
-add_cxx_compiler_flag(-Wfloat-equal)
+# add_cxx_compiler_flag(-Wshorten-64-to-32)
+# add_cxx_compiler_flag(-Wfloat-equal)
 add_cxx_compiler_flag(-Wint-to-void-pointer-cast)
 
 add_cxx_compiler_flag(-fstrict-aliasing)
@@ -80,7 +80,7 @@ include_directories ("${EXTERNAL_DIR}/include")
 # Include utils headers
 include_directories ("${ROOT_DIR}/src")
 
-set(COMMAND_SRC_FILES basic_tests)
+set(COMMAND_SRC_FILES basic_tests hybrid_hash)
 foreach (src_file ${COMMAND_SRC_FILES})
   ADD_EXECUTABLE(${src_file} ${src_file}.cpp)
   TARGET_LINK_LIBRARIES(${src_file})

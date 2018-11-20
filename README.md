@@ -68,7 +68,7 @@ int main() {
  ## C++
 
 If you prefer the convenience of a C++ interface with support for stl::vector and std::string,
-you can create a clhasher object instead.
+you can create a clhash::CLHash object instead.
 
 ```C
 #include <assert.h>
@@ -79,7 +79,7 @@ you can create a clhasher object instead.
 
 
 int main(void) {
-    clhasher h(UINT64_C(0x23a23cf5033c3c81),UINT64_C(0xb3816f6a2c68e530));
+    clhash::CLHash h(UINT64_C(0x23a23cf5033c3c81),UINT64_C(0xb3816f6a2c68e530));
     std::vector<int> vec{1,3,4,5,2,24343};
     uint64_t vechash = h(vec);
 

@@ -17,37 +17,37 @@
 #include <string>
 #include <vector>
 
-namespace lemire {
-    class clhasher {
+namespace util {
+    class CLHash {
       public:
-        clhasher(uint64_t seed1 = 137, uint64_t seed2 = 777)
+        CLHash(uint64_t seed1 = SEED1, uint64_t seed2 = SEED2)
             : random_data_(get_random_key_for_clhash(seed1, seed2)) {}
 
-        ~clhasher() { std::free((void *)random_data_); }
+        ~CLHash() { std::free((void *)random_data_); }
 
         template <typename T> uint64_t operator()(const T *data, const size_t len) const {
-            return clhash(random_data_, static_cast<const char *>(data), len * sizeof(T));
+            return clhash(random_data_, (const char *)(data), len * sizeof(T));
         }
 
-        // For strings
-        uint64_t operator()(const char *str) const {
-            return clhash(random_data_, str, strlen(str));
-        }
-
+        // Use std::hash to compute the hash value of string with size
+        // less then 192 bytes. This decision is based on our benchmark
+        // results.
         uint64_t operator()(const std::string &str) const {
             return operator()(str.data(), str.size());
         }
 
-        // For other data types
-        template <typename T> uint64_t operator()(const T &input) const {
-            return operator()((const char *)&input, sizeof(T));
+        // Other data types
+        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
+            return operator()(input.data(), input.size());
         }
 
-        template <typename T> uint64_t operator()(const std::vector<T> &input) const {
-            return operator()((const char *)input.data(), sizeof(T) * input.size());
+        template <typename T> uint64_t operator()(const T &value) const {
+            return operator()(&value, 1);
         }
 
       private:
         const void *random_data_;
+        static constexpr uint64_t SEED1 = 137;
+        static constexpr uint64_t SEED2 = 777;
     };
-} // namespace lemire
+} // namespace clhash
