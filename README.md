@@ -1,5 +1,6 @@
 # clhash
 [![Build Status](https://travis-ci.org/lemire/clhash.png)](https://travis-ci.org/lemire/clhash)
+[![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/lemire/clhash.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lemire/clhash/context:cpp)
 
 C library implementing the ridiculously fast CLHash hashing function (with C++ wrappers)
 
