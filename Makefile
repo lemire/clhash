@@ -38,4 +38,4 @@ clhash.o: ./src/clhash.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/clhash.c -Iinclude
 
 clean:
-	rm -f $(OBJECTS) unit example benchmark
+	rm -f $(OBJECTS) unit cppunit benchmark example cppexample
